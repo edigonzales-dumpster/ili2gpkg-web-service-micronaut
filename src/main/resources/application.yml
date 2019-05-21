@@ -1,0 +1,28 @@
+---
+micronaut:
+  application:
+    name: ili2gpkg-web-service
+  views:
+    folder: templates
+  router:
+    static-resources:
+      static:
+        paths: classpath:static/resources
+        mapping: /resources/**
+      webjars:
+        paths: classpath:META-INF/resources/webjars
+        mapping: /webjars/**
+  server:
+    max-request-size: 52428800
+    multipart:
+      max-file-size: 52428800
+  http:
+    client:
+      read-timeout: 0
+      connect-timeout: 0
+---
+#micronaut:
+#  io:
+#    watch:
+#      paths: src/main
+#      restart: true
