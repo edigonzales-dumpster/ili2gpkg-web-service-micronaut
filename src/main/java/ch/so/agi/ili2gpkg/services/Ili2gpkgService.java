@@ -28,6 +28,10 @@ public class Ili2gpkgService {
     private static final Logger log = LoggerFactory.getLogger(Ili2gpkgService.class);
 
     public String convert(String uploadFileName, String strokeArcs) throws Exception {
+        // for graalvm only
+        org.sqlite.JDBC.class.getName();
+
+       
         String dataFileName = null;
         
         // prepare ili2db settings

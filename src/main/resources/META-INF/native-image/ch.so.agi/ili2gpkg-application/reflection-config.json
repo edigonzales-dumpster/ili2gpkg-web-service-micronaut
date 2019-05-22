@@ -1,0 +1,9 @@
+
+[
+  {
+    "name" : "ch.ehi.ili2gpkg.GpkgMapping",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  }
+]

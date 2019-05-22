@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/edigonzales/ili2gpkg-web-service-micronaut.svg?branch=master)](https://travis-ci.org/edigonzales/ili2gpkg-web-service-micronaut)
+
 # ili2gpkg-web-service-micronaut
 
 ```

@@ -1,6 +1,6 @@
 #!/bin/sh
-docker build . -t ili2gpkg
+docker build . -t sogis/ili2gpkg-web-service
 echo
 echo
 echo "To run the docker container execute:"
-echo "    $ docker run -p 8080:8080 ili2gpkg"
+echo "    $ docker run -p 8080:8080 sogis/ili2gpkg-web-service"
