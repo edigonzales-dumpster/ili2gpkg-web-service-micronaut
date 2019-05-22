@@ -8,8 +8,13 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">    
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap" rel="stylesheet">
 
     <style>
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+        
+        }
         .border-info {
             border-color:rgba(0, 0, 0, 0.125)!important;
             border-width:1px;
@@ -26,12 +31,17 @@
     <div class="container">
         <div layout:fragment="content" style="padding-top:200px;">
 		    <div class="row justify-content-sm-center">
-			    <div class="col-sm-6 col-md-7">
+                <div class="col-sm-6 col-md-7">
+                    <div style="margin-bottom: 50px;">
+                        <i>ili2gpkg web service</i>
+                        <p>Konvertiert eine INTERLIS-Transferdatei in eine GeoPackage-Datei. Die Modelle werden in den Standard-INTERLIS-Modellablagen gesucht. Fehlende Modelle können zusammen mit der Transferdatei gezippt hochgeladen werden.</p>
+                        <p>Die Konvertierung kann einige Minuten dauern. Die Resultatedatei wird automatisch zum Download bereitgestellt.</p>
+                    </div>
 			    <!-- 
 	                <div class="card border-info">
 	                    <div class="card-body"> 
 	                     -->
-		                    <form method="POST" id="frmUpload" th:action="@{/ilivalidator}" enctype="multipart/form-data">
+		                    <form method="POST" id="frmUpload" th:action="@{/ili2gpkg}" enctype="multipart/form-data">
 		                        <div class="custom-file mb-3">
 		                            <input type="file" class="custom-file-input" name="file" id="file">
 		                            <label class="custom-file-label" for="file">Choose file</label>
@@ -39,8 +49,8 @@
                                 <br/>
                                 <br/>
 		                        <div class="custom-control custom-checkbox">
-		                            <input type="checkbox" class="custom-control-input" id="allObjectsAccessible" name="allObjectsAccessible">
-		                            <label class="custom-control-label" for="allObjectsAccessible">Assume known external objects</label>
+		                            <input type="checkbox" class="custom-control-input" id="doStrokeArcs" name="doStrokeArcs" checked>
+		                            <label class="custom-control-label" for="doStrokeArcs">Stroke arcs</label>
 		                        </div>
                                 <br/>                
 		                        <div class="mt-3">
@@ -66,10 +76,12 @@
             // fired.
             $("#frmUpload")[0].reset();
 
+            /*
             $("#frmUpload").submit(function (e) {
                 $("#btnSubmit").attr("disabled", true);
                 return true;
             });
+            */
             
             $(".custom-file-input").on("change", function() {
                 var fileName = $(this).val().split("\\").pop();

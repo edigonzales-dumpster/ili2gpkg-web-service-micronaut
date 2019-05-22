@@ -46,6 +46,9 @@ dependencies {
     
     compile "io.micronaut:micronaut-views"
     compile "org.thymeleaf:thymeleaf:3.0.11.RELEASE"    
+    compile "ch.interlis:ili2gpkg:4.1.0"    
+    compile "ch.ehi:ehibasics:1.2.0"
+    compile "org.xerial:sqlite-jdbc:3.27.2.1"
 }
 
 test.classpath += configurations.developmentOnly
