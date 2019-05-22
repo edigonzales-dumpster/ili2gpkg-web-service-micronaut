@@ -47,7 +47,8 @@ public class MainControllerTest {
                             .contentType(MediaType.MULTIPART_FORM_DATA_TYPE), File.class);
             
             Map<String, List<String>> headers = response.getHeaders().asMap();
-            
+            System.out.println(headers);
+
             assertTrue(headers.get("content-disposition").get(0).equalsIgnoreCase("attachment; filename=254900.gpkg"));
             assertTrue(headers.get("Content-Type").get(0).equalsIgnoreCase("application/octet-stream"));
             assertTrue(Integer.valueOf(headers.get("Content-Length").get(0).split(",")[0]) > 1720000);          
@@ -71,7 +72,7 @@ public class MainControllerTest {
             
             assertTrue(headers.get("content-disposition").get(0).equalsIgnoreCase("attachment; filename=LRO.gpkg"));
             assertTrue(headers.get("Content-Type").get(0).equalsIgnoreCase("application/octet-stream"));
-            assertTrue(Integer.valueOf(headers.get("Content-Length").get(0).split(",")[0]) > 1785000);          
+            assertTrue(Integer.valueOf(headers.get("Content-Length").get(0).split(",")[0]) > 1780000);          
         }
     }
 }
