@@ -10,5 +10,6 @@ FROM frolvlad/alpine-glibc
 EXPOSE 8080
 COPY --from=graalvm /home/app/ili2gpkg .
 COPY --from=graalvm /opt/graalvm-ce-19.0.0/jre/lib/amd64/libsunec.so .
-COPY libsqlitejdbc.so .
-ENTRYPOINT ["./ili2gpkg", "-Dorg.sqlite.lib.path=/", "-Dorg.sqlite.lib.name=libsqlitejdbc.so"]
+#COPY libsqlitejdbc.so .
+#ENTRYPOINT ["./ili2gpkg", "-Dorg.sqlite.lib.path=/", "-Dorg.sqlite.lib.name=libsqlitejdbc.so"]
+ENTRYPOINT ["./ili2gpkg"]
