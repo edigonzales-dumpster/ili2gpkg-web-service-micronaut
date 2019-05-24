@@ -1,14 +1,21 @@
-FROM adoptopenjdk/openjdk11:alpine-slim
+FROM adoptopenjdk/openjdk11:latest
 
-EXPOSE 8080
+USER root
+
+ENV USER_NAME ili2gpkg
 
 WORKDIR /home/ili2gpkg
 
+RUN echo "ili2gpkg:x:1001:0:ili2gpkg:/home/ili2gpkg:/bin/bash" >> /etc/passwd
+
 COPY build/libs/ili2gpkg-web-service-micronaut-*.jar app.jar
 
-RUN chown -R 1001:0 /home/ili2gpkg && \
-    chmod -R g=u /home/ili2gpkg
+RUN cd /home/ili2gpkg && \
+    chown -R 1001:0 /home/ili2gpkg && \
+    chmod -R g+rw /home/ili2gpkg && \
+    ls -la /home/ili2gpkg
 
 USER 1001
+EXPOSE 8080
 
 CMD java -noverify -XX:TieredStopAtLevel=1 -Dcom.sun.management.jmxremote -jar app.jar

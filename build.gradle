@@ -118,7 +118,7 @@ task buildDockerImage(type: DockerBuildImage) {
     description = "Build docker image."
     inputDir = project.rootDir
     dockerFile = file("Dockerfile.jvm")
-    tags = ["sogis/ili2gpkg-web-service-jvm:"+version, "sogis/ili2gpkg-web-service-jvm:latest"]
+    tags = ["sogis/ili2gpkg-web-service-jvm:"+version, "sogis/ili2gpkg-web-service-jvm:latest", "gcr.io/ili2gpkg/ili2gpkg-web-service-jvm:"+version, "gcr.io/ili2gpkg/ili2gpkg-web-service-jvm:latest"]
     labels = ["ili2gpkg-web-service.created": new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), 
             "ili2gpkg-web-service.git_commit": getCheckedOutGitCommitHash(), 
             "ili2gpkg-web-service.travis_build": version]
