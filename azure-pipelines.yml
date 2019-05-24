@@ -1,14 +1,13 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 stages:
 - stage: Build
   displayName: Build
   jobs:
   - job:
+    pool:
+      vmImage: 'ubuntu-latest'  
     steps:
     - task: Gradle@2
       inputs:
