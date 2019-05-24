@@ -20,6 +20,7 @@ stages:
         publishJUnitResults: false
         tasks: 'assemble'
     - task: Gradle@2
+      condition: succeeded()
       inputs:
         workingDirectory: ''
         gradleWrapperFile: 'gradlew'
