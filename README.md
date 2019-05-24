@@ -17,4 +17,3 @@ docker push gcr.io/ili2gpkg/ili2gpkg-web-service-jvm:latest
 
 ```
 
-cat ~/.google/ili2gpkg-d279e2242a89.json | docker login -u _json_key --password-stdin https://gcr.io
