@@ -38,7 +38,7 @@ public class MainController {
     @Get("/")
     @View("upload")
     public HttpStatus index() {
-        return HttpStatus.OK;
+//        return HttpStatus.OK;
     }
     
     @Post(value = "/", consumes = MediaType.MULTIPART_FORM_DATA, produces = MediaType.APPLICATION_OCTET_STREAM) 
