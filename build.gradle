@@ -126,15 +126,11 @@ task buildDockerImage(type: DockerBuildImage) {
 
 task pushDockerImage_One(dependsOn: 'buildDockerImage', type: DockerPushImage) {
     description = "Push docker image to hub.docker.com (only if docker tests were successful)."
-
     imageName = buildDockerImage.tags[0]
 }
 
 task pushDockerImage_Two(dependsOn: 'buildDockerImage', type: DockerPushImage) {
     description = "Push docker image to hub.docker.com (only if docker tests were successful)."
-    onlyIf {
-        dockerTest.state.failure == null
-    }
     imageName = buildDockerImage.tags[1]
 }
 
