@@ -5,6 +5,7 @@ plugins {
     id "java"
     id "net.ltgt.apt-eclipse" version "0.21"
     id "net.ltgt.apt-idea" version "0.21"
+    id "com.bmuschko.docker-remote-api" version "3.6.1"
 }
 
 apply from: "$rootDir/gradle/versioning.gradle"
@@ -68,4 +69,113 @@ run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxrem
 tasks.withType(JavaCompile){
     options.encoding = "UTF-8"
     options.compilerArgs.add('-parameters')
+}
+
+// version.txt file
+import java.text.SimpleDateFormat
+
+def getCheckedOutGitCommitHash() {
+    'git log -1 --pretty=%H'.execute().text.trim()
+}
+
+task versionTxt()  {
+    outputs.upToDateWhen { false }
+    doLast {
+        new File("version.txt").text = """
+Version: $version
+Revision: ${getCheckedOutGitCommitHash()}
+Buildtime: ${new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())}
+Application-name: ilivalidator-web-service
+"""
+    }
+}
+task copyVersionTxt(type: Copy) {
+    from "version.txt"
+    into "src/main/resources/static/resources/"
+}
+copyVersionTxt.dependsOn(versionTxt)
+build.dependsOn(copyVersionTxt)
+classes.dependsOn(copyVersionTxt)
+
+// creat java docker image
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerLogsContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer.ExposedPort
+
+docker {
+    registryCredentials {
+        username = System.env.dockerRegistryUser
+        password = System.env.dockerRegistryPass
+    }
+}
+
+task buildDockerImage(type: DockerBuildImage) {
+    description = "Build docker image."
+    inputDir = project.rootDir
+    dockerFile = file("Dockerfile.jvm")
+    tags = ["sogis/ili2gpkg-web-service-jvm:"+version, "sogis/ili2gpkg-web-service-jvm:latest"]
+    labels = ["ili2gpkg-web-service.created": new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), 
+            "ili2gpkg-web-service.git_commit": getCheckedOutGitCommitHash(), 
+            "ili2gpkg-web-service.travis_build": version]
+}
+
+task createDockerContainer(dependsOn: 'buildDockerImage', type: DockerCreateContainer) {
+    description = "Create docker container."
+    targetImageId { buildDockerImage.getImageId() }
+    portBindings = ['8888:8888']
+    exposedPorts = [new ExposedPort("tcp", [8888])]
+    
+}
+
+task startDockerContainer(dependsOn: 'createDockerContainer', type: DockerStartContainer) { 
+    description = "Start docker container."
+    targetContainerId { createDockerContainer.getContainerId() }
+
+    // Starting container != web service is ready.
+    doLast { 
+        sleep(10*1000)
+    }
+}
+
+task logDockerContainer(type: DockerLogsContainer) {
+    description = "Show docker container logs on standard out."
+    targetContainerId { startDockerContainer.getContainerId() }
+    follow = true
+    tailAll = true
+}
+
+task stopDockerContainer(type: DockerStopContainer) {
+    description = "Stop running docker container."
+    targetContainerId { createDockerContainer.getContainerId() }
+}
+
+task pushDockerImage_One(type: DockerPushImage) {
+    description = "Push docker image to hub.docker.com (only if docker tests were successful)."
+    onlyIf {
+        dockerTest.state.failure == null
+    }
+    imageName = buildDockerImage.tags[0]
+}
+
+task pushDockerImage_Two(type: DockerPushImage) {
+    description = "Push docker image to hub.docker.com (only if docker tests were successful)."
+    onlyIf {
+        dockerTest.state.failure == null
+    }
+    imageName = buildDockerImage.tags[1]
+}
+
+task pushDockerImages() {
+    doFirst{
+        println "Push Docker Images"
+    }
+}
+
+pushDockerImages.dependsOn {
+    tasks.findAll { task -> task.name.startsWith('pushDockerImage_') }
 }

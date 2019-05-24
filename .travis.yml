@@ -8,6 +8,7 @@ services:
 branches:
   only:
     - master
+    - stable
 
 install: true
 
@@ -15,9 +16,9 @@ script:
   - ./gradlew assemble test -i
   #- ./docker-build.sh $TRAVIS_COMMIT $TRAVIS_BUILD_NUMBER
 
-#deploy:
-#  - provider: script
-#    skip_cleanup: true
-#    script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ; docker push sogis/ili2gpkg-web-service-micronaut
-#    on:
-#      branch: master
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: ./gradlew pushDockerImages
+    on:
+      branch: master
