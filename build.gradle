@@ -124,45 +124,13 @@ task buildDockerImage(type: DockerBuildImage) {
             "ili2gpkg-web-service.travis_build": version]
 }
 
-task createDockerContainer(dependsOn: 'buildDockerImage', type: DockerCreateContainer) {
-    description = "Create docker container."
-    targetImageId { buildDockerImage.getImageId() }
-    portBindings = ['8888:8888']
-    exposedPorts = [new ExposedPort("tcp", [8888])]
-    
-}
-
-task startDockerContainer(dependsOn: 'createDockerContainer', type: DockerStartContainer) { 
-    description = "Start docker container."
-    targetContainerId { createDockerContainer.getContainerId() }
-
-    // Starting container != web service is ready.
-    doLast { 
-        sleep(10*1000)
-    }
-}
-
-task logDockerContainer(type: DockerLogsContainer) {
-    description = "Show docker container logs on standard out."
-    targetContainerId { startDockerContainer.getContainerId() }
-    follow = true
-    tailAll = true
-}
-
-task stopDockerContainer(type: DockerStopContainer) {
-    description = "Stop running docker container."
-    targetContainerId { createDockerContainer.getContainerId() }
-}
-
-task pushDockerImage_One(type: DockerPushImage) {
+task pushDockerImage_One(dependsOn: 'buildDockerImage', type: DockerPushImage) {
     description = "Push docker image to hub.docker.com (only if docker tests were successful)."
-    onlyIf {
-        dockerTest.state.failure == null
-    }
+
     imageName = buildDockerImage.tags[0]
 }
 
-task pushDockerImage_Two(type: DockerPushImage) {
+task pushDockerImage_Two(dependsOn: 'buildDockerImage', type: DockerPushImage) {
     description = "Push docker image to hub.docker.com (only if docker tests were successful)."
     onlyIf {
         dockerTest.state.failure == null
