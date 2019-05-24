@@ -51,7 +51,7 @@ public class MainControllerTest {
 
             assertTrue(headers.get("content-disposition").get(0).equalsIgnoreCase("attachment; filename=254900.gpkg"));
             assertTrue(headers.get("Content-Type").get(0).equalsIgnoreCase("application/octet-stream"));
-            assertTrue(Integer.valueOf(headers.get("Content-Length").get(0).split(",")[0]) > 1720000);          
+            assertTrue(Integer.valueOf(headers.get("Content-Length").get(0).split(",")[0]) > 1700000);          
         }
     }
     
