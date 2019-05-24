@@ -10,6 +10,7 @@ stages:
       vmImage: 'ubuntu-latest'  
     steps:
     - task: Gradle@2
+      displayName: Assemble
       inputs:
         workingDirectory: ''
         gradleWrapperFile: 'gradlew'
@@ -20,6 +21,7 @@ stages:
         publishJUnitResults: false
         tasks: 'assemble'
     - task: Gradle@2
+      displayName: Test    
       condition: succeeded()
       inputs:
         workingDirectory: ''
